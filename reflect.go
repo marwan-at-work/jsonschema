@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"net"
 	"net/url"
+	"path/filepath"
 	"reflect"
 	"strconv"
 	"strings"
@@ -121,7 +122,7 @@ func (r *Reflector) ReflectFromType(t reflect.Type) *Schema {
 		}
 		r.reflectStructFields(st, definitions, t)
 		r.reflectStruct(definitions, t)
-		delete(definitions, t.Name())
+		delete(definitions, name(t))
 		return &Schema{Type: st, Definitions: definitions}
 	}
 
@@ -155,10 +156,19 @@ type protoEnum interface {
 
 var protoEnumType = reflect.TypeOf((*protoEnum)(nil)).Elem()
 
+func name(t reflect.Type) string {
+	return strings.Replace(
+		filepath.Base(t.PkgPath())+"_"+t.Name(),
+		"-",
+		"_",
+		-1,
+	)
+}
+
 func (r *Reflector) reflectTypeToSchema(definitions Definitions, t reflect.Type) *Type {
 	// Already added to definitions?
-	if _, ok := definitions[t.Name()]; ok {
-		return &Type{Ref: "#/definitions/" + t.Name()}
+	if _, ok := definitions[name(t)]; ok {
+		return &Type{Ref: "#/definitions/" + name(t)}
 	}
 
 	// jsonpb will marshal protobuf enum options as either strings or integers.
@@ -253,12 +263,12 @@ func (r *Reflector) reflectStruct(definitions Definitions, t reflect.Type) *Type
 	if r.AllowAdditionalProperties {
 		st.AdditionalProperties = []byte("true")
 	}
-	definitions[t.Name()] = st
+	definitions[name(t)] = st
 	r.reflectStructFields(st, definitions, t)
 
 	return &Type{
 		Version: Version,
-		Ref:     "#/definitions/" + t.Name(),
+		Ref:     "#/definitions/" + name(t),
 	}
 }
 

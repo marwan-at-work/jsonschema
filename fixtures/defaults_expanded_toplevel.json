@@ -50,7 +50,7 @@
     },
     "grand": {
       "$schema": "http:\/\/json-schema.org\/draft-04\/schema#",
-      "$ref": "#\/definitions\/GrandfatherType"
+      "$ref": "#\/definitions\/jsonschema_GrandfatherType"
     },
     "id": {
       "type": "integer"
@@ -90,7 +90,7 @@
   "additionalProperties": false,
   "type": "object",
   "definitions": {
-    "GrandfatherType": {
+    "jsonschema_GrandfatherType": {
       "required": [
         "family_name"
       ],
