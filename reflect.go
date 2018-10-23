@@ -112,7 +112,6 @@ func (r *Reflector) ReflectFromType(t reflect.Type) *Schema {
 	definitions := Definitions{}
 	if r.ExpandedStruct {
 		st := &Type{
-			Version:              Version,
 			Type:                 "object",
 			Properties:           map[string]*Type{},
 			AdditionalProperties: []byte("false"),
@@ -267,8 +266,7 @@ func (r *Reflector) reflectStruct(definitions Definitions, t reflect.Type) *Type
 	r.reflectStructFields(st, definitions, t)
 
 	return &Type{
-		Version: Version,
-		Ref:     "#/definitions/" + name(t),
+		Ref: "#/definitions/" + name(t),
 	}
 }
 
