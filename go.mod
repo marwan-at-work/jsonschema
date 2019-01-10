@@ -1,1 +1,3 @@
-module github.com/alecthomas/jsonschema
+module marwan.io/jsonschema
+
+go 1.12
